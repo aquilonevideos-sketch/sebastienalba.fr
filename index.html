@@ -34,8 +34,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:cen
 
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 56px 80px;position:relative;overflow:hidden}
-.mesh{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 85% 20%,rgba(255,45,107,0.18) 0%,transparent 55%),radial-gradient(ellipse 45% 45% at 10% 80%,rgba(124,58,237,0.15) 0%,transparent 55%),radial-gradient(ellipse 35% 35% at 55% 50%,rgba(0,212,255,0.07) 0%,transparent 50%);animation:meshA 8s ease-in-out infinite alternate}
-@keyframes meshA{0%{filter:hue-rotate(0deg) brightness(1)}100%{filter:hue-rotate(18deg) brightness(1.12)}}
+.mesh{position:absolute;inset:0;background:url('https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/hero2.png') center center/cover no-repeat;}
+.mesh::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(2,2,10,0.92) 0%,rgba(2,2,10,0.75) 50%,rgba(2,2,10,0.5) 100%)}
 .orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none}
 .o1{width:500px;height:500px;background:rgba(255,45,107,0.11);right:-100px;top:-100px;animation:oF 10s ease-in-out infinite}
 .o2{width:400px;height:400px;background:rgba(124,58,237,0.09);left:-80px;bottom:0;animation:oF 12s ease-in-out infinite reverse}
@@ -130,9 +130,79 @@ h2 .gr2{background:linear-gradient(90deg,var(--c2),var(--c3));-webkit-background
 .tool:nth-child(5)::before{background:var(--c1)}.tool:nth-child(6)::before{background:var(--c2)}
 .tool:hover{border-color:rgba(255,255,255,0.13);background:rgba(255,255,255,0.02)}
 .tool:hover::before{opacity:1}
-.tool-ico{font-size:18px;margin-bottom:8px}
+.tool-ico{width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:var(--c3)}
 .tool-n{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em;margin-bottom:2px}
 .tool-r{font-size:10px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+
+
+
+/* BOTTOM IMAGE */
+.bottom-img{position:relative;width:100%;height:420px;overflow:hidden}
+.bottom-img img{width:100%;height:100%;object-fit:cover;object-position:center}
+
+
+/* GALLERY */
+#gallery{padding:120px 56px}
+.gallery-intro{text-align:center;margin-bottom:60px}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:220px;
+  gap:4px;
+}
+.gitem{
+  position:relative;overflow:hidden;cursor:none;
+  background:var(--s1);
+}
+.gitem img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  transition:transform .6s cubic-bezier(.25,.46,.45,.94);
+  filter:brightness(.85);
+}
+.gitem:hover img{transform:scale(1.06);filter:brightness(1)}
+.gitem-label{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:16px 20px;
+  background:linear-gradient(to top,rgba(2,2,10,.85),transparent);
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6);
+  transform:translateY(100%);transition:transform .35s;
+}
+.gitem:hover .gitem-label{transform:translateY(0)}
+.gitem.wide{grid-column:span 2}
+.gitem.tall{grid-row:span 2}
+@media(max-width:900px){
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .gitem.wide{grid-column:span 1}
+}
+
+/* FORMATION */
+#formation{background:var(--s1)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.fcard{padding:36px;background:var(--bg);border:1px solid var(--border);margin-bottom:4px;transition:border-color .3s;position:relative;overflow:hidden}
+.fcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c2),var(--c3));transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.fcard:hover{border-color:rgba(124,58,237,0.25)}.fcard:hover::before{transform:scaleX(1)}
+.fcard-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.04em;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.fcard-desc{font-size:13px;color:var(--muted);line-height:1.75;font-weight:300}
+.fcard-tag{display:inline-block;margin-top:12px;padding:4px 12px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--c2);border-radius:2px}
+.financing{padding:32px 36px;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);margin-top:4px}
+.financing-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em;color:var(--c3);margin-bottom:10px}
+.financing-text{font-size:13px;color:var(--muted);line-height:1.75;font-weight:300}
+.financing-text strong{color:var(--text);font-weight:500}
+.partner-link{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c3);text-decoration:none;transition:gap .25s}
+.partner-link:hover{gap:14px}.partner-link::after{content:'→'}
+
+/* SOLUTIONS */
+#solutions{}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:60px}
+.scard{padding:40px 32px;background:var(--s1);border:1px solid var(--border);transition:all .35s;position:relative;overflow:hidden}
+.scard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.scard:nth-child(1)::after{background:var(--c1)}.scard:nth-child(1) .scard-ico{color:var(--c1);border-color:rgba(255,45,107,0.2);background:rgba(255,45,107,0.05)}.scard:nth-child(2)::after{background:var(--c2)}.scard:nth-child(2) .scard-ico{color:var(--c2);border-color:rgba(124,58,237,0.2);background:rgba(124,58,237,0.05)}.scard:nth-child(3)::after{background:var(--c3)}.scard:nth-child(3) .scard-ico{color:var(--c3);border-color:rgba(0,212,255,0.2);background:rgba(0,212,255,0.05)}
+.scard:hover{border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.02)}.scard:hover::after{transform:scaleX(1)}
+.scard-ico{width:48px;height:48px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--c1);border:1px solid rgba(255,45,107,0.2);border-radius:3px;background:rgba(255,45,107,0.05)}
+.scard-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.04em;margin-bottom:10px}
+.scard-desc{font-size:13px;color:var(--muted);line-height:1.75;font-weight:300}
 
 /* PROCESS */
 .psteps{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:60px}
@@ -209,12 +279,12 @@ footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;align-i
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="logo">Sébastien Alba<span class="logo-pill">IA Vidéo</span></a>
+  <a href="#" class="logo"><img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/logoSA2.png" alt="Sébastien Alba" style="height:42px;width:auto;object-fit:contain"></a>
   <div class="nav-r">
     <a href="#work">Réalisations</a>
-    <a href="#about">Approche</a>
-    <a href="#process">Process</a>
-    <a href="#offer">Offres</a>
+    <a href="#formation">Formations IA</a>
+    <a href="#solutions">Solutions IA</a>
+    <a href="#offer">Vidéo IA</a>
     <a href="https://wa.me/33625884486" target="_blank" class="nav-cta">Démarrer →</a>
   </div>
 </nav>
@@ -287,7 +357,7 @@ footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;align-i
     <!-- SPEEDKART -->
     <div class="wcard rev">
       <div class="wcard-thumb">
-        <canvas class="wcard-canvas" id="cvk"></canvas>
+        <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/karting.png" alt="Speedkart Hyères" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
         <a class="wcard-yt-link" href="https://youtu.be/8uG31_HD7nE" target="_blank" rel="noopener">
           <div class="yt-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
           <span class="yt-label">Regarder sur YouTube</span>
@@ -304,7 +374,7 @@ footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;align-i
     <!-- COIFFEUR LUXE -->
     <div class="wcard rev" style="transition-delay:.15s">
       <div class="wcard-thumb">
-        <canvas class="wcard-canvas" id="cvc"></canvas>
+        <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/coiffure.png" alt="Publicité Coiffure Luxe" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
         <a class="wcard-yt-link" href="https://youtu.be/humNVbSbxsg" target="_blank" rel="noopener">
           <div class="yt-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
           <span class="yt-label">Regarder sur YouTube</span>
@@ -321,6 +391,59 @@ footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;align-i
   </div>
 </section>
 
+
+<div class="hr"></div>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-intro rev">
+    <div class="slabel" style="justify-content:center">Portfolio</div>
+    <h2>L'IA s'adapte<br><span class="dim">à tous les secteurs.</span></h2>
+    <p style="font-size:15px;font-weight:300;color:var(--muted);max-width:520px;margin:16px auto 0;line-height:1.75">Restauration, immobilier, mariage, artisanat, mode, voyage, court métrage... Chaque univers devient possible.</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gitem wide rev">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/immobilier.png" alt="Immobilier">
+      <div class="gitem-label">Immobilier · Vue aérienne</div>
+    </div>
+    <div class="gitem rev" style="transition-delay:.1s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/mariage.png" alt="Mariage luxe">
+      <div class="gitem-label">Mariage · Luxe</div>
+    </div>
+    <div class="gitem rev" style="transition-delay:.15s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/confiture.png" alt="Artisanat food">
+      <div class="gitem-label">Artisanat · Food</div>
+    </div>
+    <div class="gitem rev" style="transition-delay:.2s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/animation.png" alt="Court métrage">
+      <div class="gitem-label">Cinéma · Court métrage</div>
+    </div>
+    <div class="gitem rev" style="transition-delay:.25s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/personnage.png" alt="Character design">
+      <div class="gitem-label">Cinéma · Character design</div>
+    </div>
+    <div class="gitem rev" style="transition-delay:.1s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/tasse.png" alt="Artisanat lifestyle">
+      <div class="gitem-label">Artisanat · Lifestyle</div>
+    </div>
+    <div class="gitem wide rev" style="transition-delay:.15s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/charcuterie.png" alt="Gastronomie">
+      <div class="gitem-label">Gastronomie · Produits locaux</div>
+    </div>
+    <div class="gitem rev" style="transition-delay:.2s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/désert.png" alt="Voyage">
+      <div class="gitem-label">Voyage · Tourisme</div>
+    </div>
+    <div class="gitem rev" style="transition-delay:.25s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/peinture.png" alt="Décoration">
+      <div class="gitem-label">Décoration · Artisanat</div>
+    </div>
+    <div class="gitem wide rev" style="transition-delay:.3s">
+      <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/tasse.png" alt="Intérieur design">
+      <div class="gitem-label">Architecture · Intérieur</div>
+    </div>
+  </div>
+</section>
 <div class="hr"></div>
 
 <!-- ABOUT -->
@@ -336,12 +459,12 @@ footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;align-i
     <div class="rev" style="transition-delay:.15s">
       <div class="slabel">Stack IA</div>
       <div class="tools">
-        <div class="tool"><div class="tool-ico">🧠</div><div class="tool-n">ChatGPT</div><div class="tool-r">Génération & scripts</div></div>
-        <div class="tool"><div class="tool-ico">🎨</div><div class="tool-n">Midjourney</div><div class="tool-r">Création visuelle</div></div>
-        <div class="tool"><div class="tool-ico">🎬</div><div class="tool-n">Kling AI</div><div class="tool-r">Animation vidéo</div></div>
-        <div class="tool"><div class="tool-ico">🌱</div><div class="tool-n">Seedance</div><div class="tool-r">Vidéo générative</div></div>
-        <div class="tool"><div class="tool-ico">🎛️</div><div class="tool-n">DaVinci Resolve</div><div class="tool-r">Montage & color</div></div>
-        <div class="tool"><div class="tool-ico">🔊</div><div class="tool-n">ElevenLabs</div><div class="tool-r">Voix off & audio IA</div></div>
+        <div class="tool"><div class="tool-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="3"/></svg></div><div class="tool-n">ChatGPT</div><div class="tool-r">Génération & scripts</div></div>
+        <div class="tool"><div class="tool-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="tool-n">Midjourney</div><div class="tool-r">Création visuelle</div></div>
+        <div class="tool"><div class="tool-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div class="tool-n">Kling AI</div><div class="tool-r">Animation vidéo</div></div>
+        <div class="tool"><div class="tool-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="tool-n">Seedance</div><div class="tool-r">Vidéo générative</div></div>
+        <div class="tool"><div class="tool-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="tool-n">DaVinci Resolve</div><div class="tool-r">Montage & color</div></div>
+        <div class="tool"><div class="tool-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div><div class="tool-n">ElevenLabs</div><div class="tool-r">Voix off & audio IA</div></div>
       </div>
     </div>
   </div>
@@ -359,6 +482,74 @@ footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;align-i
     <div class="pstep rev"><div class="pn">01</div><div class="pt">Brief & Concept</div><p class="pd">Échange sur votre marque, vos objectifs, votre cible. Je construis le concept visuel et narratif adapté à votre univers.</p></div>
     <div class="pstep rev" style="transition-delay:.15s"><div class="pn">02</div><div class="pt">Génération IA</div><p class="pd">Production des visuels avec Midjourney & ChatGPT, animation des scènes avec Kling AI et Seedance. Chaque frame est générée et sélectionnée avec soin.</p></div>
     <div class="pstep rev" style="transition-delay:.3s"><div class="pn">03</div><div class="pt">Montage & Livraison</div><p class="pd">Assemblage, étalonnage et sound design sur DaVinci Resolve. Livraison Full HD à 4K en 48 à 72 h, optimisée pour tous vos supports digitaux.</p></div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- FORMATION IA -->
+<section id="formation">
+  <div class="fgrid">
+    <div class="rev">
+      <div class="slabel">Formations IA</div>
+      <h2 style="margin-bottom:20px">Maîtrisez<br><span class="dim">l'IA concrètement.</span></h2>
+      <p class="about-body" style="margin-bottom:32px">Des formations <strong>100% opérationnelles</strong> pour intégrer l'IA dans votre quotidien professionnel. Pas de théorie — des outils, des méthodes, des résultats immédiats.</p>
+      <div class="financing">
+        <div class="financing-title">Financement possible</div>
+        <div class="financing-text">Vos formations peuvent être <strong>intégralement prises en charge</strong> par votre OPCO, le FAFCEA, l'Agefice ou d'autres organismes financeurs. <strong>Zéro reste à charge possible</strong> pour les artisans, indépendants et chefs d'entreprise.</div>
+        <a href="https://www.beconsulting-formation.com/" target="_blank" class="partner-link">Partenaire BE Consulting Formation</a>
+      </div>
+    </div>
+    <div class="rev" style="transition-delay:.15s">
+      <div class="fcard">
+        <div class="fcard-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="7" r="4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg> IA pour non-techniciens</div>
+        <div class="fcard-desc">Comprendre et utiliser ChatGPT, Midjourney et les outils IA du quotidien. Gagner du temps sur toutes vos tâches répétitives.</div>
+        <span class="fcard-tag">Débutant · 1 jour</span>
+      </div>
+      <div class="fcard">
+        <div class="fcard-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v4l3 3"/></svg> Automatisation & productivité</div>
+        <div class="fcard-desc">Créer des workflows automatisés, des agents IA, et optimiser vos process métier. Pour aller plus loin que le simple usage des outils.</div>
+        <span class="fcard-tag">Intermédiaire · 2 jours</span>
+      </div>
+      <div class="fcard">
+        <div class="fcard-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><rect x="2" y="6" width="15" height="12" rx="2"/><path d="M17 9l5-3v12l-5-3V9z"/></svg> IA & Contenu vidéo</div>
+        <div class="fcard-desc">Créer des vidéos publicitaires avec l'IA de A à Z. Midjourney, Kling AI, DaVinci Resolve — le process complet pour produire sans équipe.</div>
+        <span class="fcard-tag">Tous niveaux · 1 jour</span>
+      </div>
+      <div class="fcard">
+        <div class="fcard-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> IA & Stratégie d'entreprise</div>
+        <div class="fcard-desc">Intégrer l'IA dans sa stratégie commerciale, sa communication et sa gestion. Pour les dirigeants qui veulent prendre de l'avance.</div>
+        <span class="fcard-tag">Dirigeants · Sur mesure</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- SOLUTIONS IA -->
+<section id="solutions">
+  <div class="rev" style="text-align:center;margin-bottom:12px">
+    <div class="slabel" style="justify-content:center">Solutions IA</div>
+    <h2>L'IA au service<br><span class="dim">de votre activité.</span></h2>
+    <p style="font-size:15px;font-weight:300;color:var(--muted);max-width:560px;margin:20px auto 0;line-height:1.75">Des solutions concrètes déployées directement dans votre entreprise. Pas de jargon — des résultats mesurables.</p>
+  </div>
+  <div class="sgrid">
+    <div class="scard rev">
+      <div class="scard-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="7" r="4"/><circle cx="8.5" cy="15.5" r="1" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1" fill="currentColor"/></svg></div>
+      <div class="scard-title">Agents IA sur-mesure</div>
+      <div class="scard-desc">Création d'assistants IA personnalisés qui répondent à vos clients, traitent vos demandes et automatisent vos tâches répétitives 24h/24.</div>
+    </div>
+    <div class="scard rev" style="transition-delay:.15s">
+      <div class="scard-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <div class="scard-title">Automatisation de process</div>
+      <div class="scard-desc">Analyse de vos flux de travail et déploiement d'automatisations IA. Prospection, gestion client, reporting, facturation — tout ce qui peut être automatisé, l'est.</div>
+    </div>
+    <div class="scard rev" style="transition-delay:.3s">
+      <div class="scard-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="9" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="15" y1="10" x2="15" y2="10"/></svg></div>
+      <div class="scard-title">Contenu & communication IA</div>
+      <div class="scard-desc">Mise en place d'un système de création de contenu IA pour vos réseaux sociaux, newsletters et supports marketing. Publiez plus, en moins de temps.</div>
+    </div>
   </div>
 </section>
 
@@ -418,9 +609,14 @@ footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;align-i
   </div>
 </section>
 
+<!-- BOTTOM IMAGE -->
+<div class="bottom-img">
+  <img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/hero.png" alt="Sébastien Alba Expert IA">
+</div>
+
 <!-- FOOTER -->
 <footer>
-  <div class="flogo">Sébastien Alba</div>
+  <div class="flogo"><img src="https://raw.githubusercontent.com/aquilonevideos-sketch/sebastienalba.fr/main/logoSA2.png" alt="Sébastien Alba" style="height:36px;width:auto;object-fit:contain;filter:brightness(0) invert(1)"></div>
   <div class="flegal">© 2025 Aquilone Vidéos SASU · Tous droits réservés</div>
   <ul class="flinks">
     <li><a href="#work">Réalisations</a></li>
@@ -443,51 +639,9 @@ document.querySelectorAll('a,button,.tool,.pstep,.ocard,.wcard').forEach(el=>{
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
 document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
 
-/* CANVAS KARTING */
-(function(){
-  const cv=document.getElementById('cvk');if(!cv)return;
-  const ctx=cv.getContext('2d');let w,h,t=0;
-  function rsz(){w=cv.width=cv.offsetWidth;h=cv.height=cv.offsetHeight}
-  rsz();new ResizeObserver(rsz).observe(cv);
-  const pts=[[.15,.65],[.78,.28],[.82,.72],[.22,.42]];
-  let pi=0,prog=0;
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    // bg gradient
-    const g=ctx.createRadialGradient(w*.35,h*.6,0,w*.35,h*.6,w*.5);
-    g.addColorStop(0,'rgba(42,18,0,1)');g.addColorStop(.5,'rgba(13,8,0,1)');g.addColorStop(1,'rgba(2,2,2,1)');
-    ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-    // track ovals
-    [[w*.38,h*.3],[w*.27,h*.22]].forEach(([rx,ry],i)=>{
-      ctx.save();ctx.strokeStyle=`rgba(255,140,0,${[.07,.04][i]})`;ctx.lineWidth=[2,1][i];
-      ctx.beginPath();ctx.ellipse(w*.5,h*.5,rx,ry,-.1,0,Math.PI*2);ctx.stroke();ctx.restore();
-    });
-    // speed lines
-    for(let i=0;i<5;i++){
-      const y=h*(.25+i*.1);const a=(Math.sin(t*.05+i)*.4+.4)*.2;
-      ctx.save();ctx.strokeStyle=`rgba(255,140,0,${a})`;ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(w*.02,y);ctx.lineTo(w*.38,y);ctx.stroke();ctx.restore();
-    }
-    // kart
-    const na=(pi+1)%pts.length;
-    prog+=.007;if(prog>=1){prog=0;pi=(pi+1)%pts.length}
-    const ease=prog<.5?2*prog*prog:1-Math.pow(-2*prog+2,2)/2;
-    const cx=pts[pi][0]+(pts[na][0]-pts[pi][0])*ease;
-    const cy=pts[pi][1]+(pts[na][1]-pts[pi][1])*ease;
-    // glow rings
-    [28,16,8].forEach((r,i)=>{
-      const a=[.06,.12,.25][i];
-      ctx.save();ctx.fillStyle=`rgba(255,140,0,${a})`;
-      ctx.beginPath();ctx.arc(cx*w,cy*h,r,0,Math.PI*2);ctx.fill();ctx.restore();
-    });
-    ctx.save();ctx.fillStyle='#ff8c00';
-    ctx.beginPath();ctx.arc(cx*w,cy*h,4,0,Math.PI*2);ctx.fill();ctx.restore();
-    t++;requestAnimationFrame(draw);
-  }
-  draw();
-})();
 
-/* CANVAS LUXE */
+
+
 (function(){
   const cv=document.getElementById('cvc');if(!cv)return;
   const ctx=cv.getContext('2d');let w,h,t=0;
