@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sébastien Alba — Vidéo IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#02020a;--s1:#07070f;--s2:#0d0d1a;
+  --c1:#ff2d6b;--c2:#7c3aed;--c3:#00d4ff;--c4:#ffbe0b;
+  --text:#f0f0f8;--muted:rgba(240,240,248,0.45);--border:rgba(255,255,255,0.07);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none}
+
+#dot{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--c1);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s}
+#ring{position:fixed;width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(255,45,107,0.5);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .15s,height .15s}
+body.h #dot{width:18px;height:18px;background:var(--c2)}
+body.h #ring{width:60px;height:60px;border-color:rgba(124,58,237,0.6)}
+
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1000}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 56px;height:76px;background:rgba(2,2,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.1em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:12px}
+.logo-pill{padding:3px 10px;background:var(--c1);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.15em;border-radius:2px;text-transform:uppercase}
+.nav-r{display:flex;align-items:center;gap:32px}
+.nav-r a{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-r a:hover{color:var(--text)}
+.nav-cta{padding:10px 26px!important;background:var(--c1)!important;color:#fff!important;font-weight:700!important;border-radius:3px}
+.nav-cta:hover{opacity:.85;color:#fff!important}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 56px 80px;position:relative;overflow:hidden}
+.mesh{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 85% 20%,rgba(255,45,107,0.18) 0%,transparent 55%),radial-gradient(ellipse 45% 45% at 10% 80%,rgba(124,58,237,0.15) 0%,transparent 55%),radial-gradient(ellipse 35% 35% at 55% 50%,rgba(0,212,255,0.07) 0%,transparent 50%);animation:meshA 8s ease-in-out infinite alternate}
+@keyframes meshA{0%{filter:hue-rotate(0deg) brightness(1)}100%{filter:hue-rotate(18deg) brightness(1.12)}}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none}
+.o1{width:500px;height:500px;background:rgba(255,45,107,0.11);right:-100px;top:-100px;animation:oF 10s ease-in-out infinite}
+.o2{width:400px;height:400px;background:rgba(124,58,237,0.09);left:-80px;bottom:0;animation:oF 12s ease-in-out infinite reverse}
+.o3{width:300px;height:300px;background:rgba(0,212,255,0.06);right:30%;top:40%;animation:oF 9s ease-in-out infinite 3s}
+@keyframes oF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-40px) scale(1.07)}}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 0%,transparent 80%)}
+
+.hero-tag{display:inline-flex;align-items:center;gap:10px;margin-bottom:32px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--c3);text-transform:uppercase;opacity:0;animation:fup .6s .1s forwards}
+.tblink{width:8px;height:8px;border-radius:50%;background:var(--c3);animation:blk 1.2s infinite}
+@keyframes blk{0%,100%{opacity:1;box-shadow:0 0 8px var(--c3)}50%{opacity:.3;box-shadow:none}}
+
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,11vw,176px);line-height:.9;letter-spacing:.02em;margin-bottom:28px;position:relative;z-index:2;opacity:0;animation:fup .8s .25s forwards}
+.gr{background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:300%;animation:gsh 4s ease infinite}
+@keyframes gsh{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
+.outline{-webkit-text-stroke:2px rgba(255,255,255,0.15);color:transparent}
+
+.hero-desc{font-size:16px;font-weight:300;color:var(--muted);line-height:1.75;max-width:540px;margin-bottom:52px;opacity:0;animation:fup .7s .45s forwards}
+.hero-desc strong{color:var(--text);font-weight:500}
+.hero-btns{display:flex;align-items:center;gap:16px;opacity:0;animation:fup .7s .6s forwards}
+
+.btn-fire{padding:17px 44px;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border:none;cursor:none;border-radius:3px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;display:inline-flex;align-items:center;gap:10px}
+.btn-fire::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--c3),var(--c1));opacity:0;transition:opacity .3s}
+.btn-fire:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,45,107,0.4)}
+.btn-fire:hover::before{opacity:1}
+.btn-fire span,.btn-fire svg{position:relative;z-index:1}
+.btn-outline{padding:16px 40px;background:transparent;border:1.5px solid rgba(255,255,255,0.15);color:var(--muted);font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:border-color .25s,color .25s}
+.btn-outline:hover{border-color:var(--c3);color:var(--c3)}
+
+.hero-kpis{display:flex;gap:0;margin-top:80px;border-top:1px solid var(--border);opacity:0;animation:fup .7s .8s forwards}
+.kpi{flex:1;padding:28px 0 0;position:relative}
+.kpi+.kpi{border-left:1px solid var(--border);padding-left:40px}
+.kv{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:.02em;line-height:1;background:linear-gradient(135deg,var(--text),rgba(240,240,248,0.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.kl{font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.kpi-acc{position:absolute;top:0;left:0;width:40px;height:2px}
+.kpi:nth-child(1) .kpi-acc{background:var(--c1)}
+.kpi:nth-child(2) .kpi-acc{background:var(--c2)}
+.kpi:nth-child(3) .kpi-acc{background:var(--c3)}
+.kpi:nth-child(4) .kpi-acc{background:var(--c4)}
+
+.scroll-cue{position:absolute;bottom:40px;left:56px;display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.18);opacity:0;animation:fup .6s 1.2s forwards}
+.sc-arrow{width:24px;height:24px;border:1px solid rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:bnc 2s infinite}
+@keyframes bnc{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* TICKER */
+.ticker{padding:14px 0;overflow:hidden;white-space:nowrap;background:rgba(255,45,107,0.05);border-top:1px solid rgba(255,45,107,0.12);border-bottom:1px solid rgba(255,45,107,0.12)}
+.ticker-t{display:inline-flex;animation:tick 24s linear infinite}
+.ticker-i{display:inline-flex;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,45,107,0.55);padding:0 28px}
+.ticker-sep{color:rgba(255,45,107,0.22)}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section{padding:120px 56px;position:relative}
+.slabel{display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--c1);margin-bottom:16px}
+.slabel::before{content:'';width:28px;height:2px;background:var(--c1)}
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,6vw,88px);letter-spacing:.02em;line-height:.95;margin-bottom:16px}
+h2 .dim{color:rgba(240,240,248,0.22)}
+h2 .gr2{background:linear-gradient(90deg,var(--c2),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* WORK */
+#work{padding-bottom:60px}
+.whead{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+
+.wcard{background:var(--s1);overflow:hidden;position:relative}
+
+/* Thumbnail clickable */
+.wcard-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;cursor:none}
+.wcard-canvas{position:absolute;inset:0;width:100%;height:100%}
+.wcard-yt-link{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-decoration:none;z-index:2}
+.yt-play-btn{width:68px;height:68px;background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);transition:all .3s}
+.yt-play-btn svg{width:24px;height:24px;fill:white;margin-left:4px}
+.wcard-yt-link:hover .yt-play-btn{background:var(--c1);border-color:var(--c1);transform:scale(1.1);box-shadow:0 0 30px rgba(255,45,107,0.5)}
+.yt-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.5)}
+.wcard-yt-link:hover .yt-label{color:rgba(255,255,255,0.8)}
+.wcard-badge{position:absolute;top:14px;right:14px;padding:5px 12px;background:rgba(2,2,10,0.8);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(8px);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,0.55);border-radius:2px;z-index:3}
+
+.wcard-info{padding:26px 30px 30px;border-top:1px solid var(--border)}
+.wcard-sector{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--c3);margin-bottom:6px}
+.wcard-name{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.03em;margin-bottom:4px}
+.wcard-sub{font-size:12px;color:var(--muted);font-weight:300}
+
+/* ABOUT */
+#about{background:var(--s1)}
+.agrid{display:grid;grid-template-columns:1.1fr 1fr;gap:100px;align-items:start}
+.about-body{font-size:15px;font-weight:300;color:var(--muted);line-height:1.85;margin-bottom:20px}
+.about-body strong{color:var(--text);font-weight:500}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:8px}
+.tool{padding:20px 22px;background:var(--bg);border:1px solid var(--border);transition:border-color .3s,background .3s;position:relative;overflow:hidden}
+.tool::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .3s}
+.tool:nth-child(1)::before{background:var(--c1)}.tool:nth-child(2)::before{background:var(--c2)}
+.tool:nth-child(3)::before{background:var(--c3)}.tool:nth-child(4)::before{background:var(--c4)}
+.tool:nth-child(5)::before{background:var(--c1)}.tool:nth-child(6)::before{background:var(--c2)}
+.tool:hover{border-color:rgba(255,255,255,0.13);background:rgba(255,255,255,0.02)}
+.tool:hover::before{opacity:1}
+.tool-ico{font-size:18px;margin-bottom:8px}
+.tool-n{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em;margin-bottom:2px}
+.tool-r{font-size:10px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+
+/* PROCESS */
+.psteps{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:60px}
+.pstep{padding:44px 36px;background:var(--s1);border:1px solid var(--border);transition:border-color .35s;position:relative;overflow:hidden}
+.pstep::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.pstep:nth-child(1)::after{background:var(--c1)}.pstep:nth-child(2)::after{background:var(--c2)}.pstep:nth-child(3)::after{background:var(--c3)}
+.pstep:hover{border-color:rgba(255,255,255,0.11)}.pstep:hover::after{transform:scaleX(1)}
+.pn{font-family:'Bebas Neue',sans-serif;font-size:80px;line-height:.9;color:rgba(255,255,255,0.04);margin-bottom:24px;transition:color .3s}
+.pstep:hover .pn{color:rgba(255,255,255,0.07)}
+.pt{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.04em;margin-bottom:12px}
+.pd{font-size:13px;color:var(--muted);line-height:1.75;font-weight:300}
+
+/* OFFER */
+#offer{background:var(--s1)}
+.ocards{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:60px}
+.ocard{padding:44px 36px;background:var(--bg);border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .3s}
+.ocard.hot{border-color:rgba(255,45,107,0.35);background:rgba(255,45,107,0.04)}
+.ocard.hot::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.ocard:not(.hot):hover{border-color:rgba(255,255,255,0.12)}
+.ohot-tag{position:absolute;top:20px;right:20px;padding:4px 10px;background:rgba(255,45,107,0.12);border:1px solid rgba(255,45,107,0.3);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--c1);border-radius:2px}
+.on{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.ot{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.03em;line-height:1.1;margin-bottom:28px}
+.ofeats{list-style:none;margin-bottom:36px}
+.ofeats li{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);padding:9px 0;border-bottom:1px solid var(--border);font-weight:300}
+.ofeats li::before{content:'';flex-shrink:0;width:5px;height:5px;border-radius:50%;background:var(--c3)}
+.olink{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c1);text-decoration:none;transition:gap .25s,color .25s}
+.olink:hover{gap:14px;color:var(--c3)}.olink::after{content:'→'}
+
+/* CONTACT */
+#contact{text-align:center;overflow:hidden}
+.cbg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(124,58,237,0.1) 0%,transparent 65%),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(255,45,107,0.06) 0%,transparent 50%)}
+.cinner{position:relative;z-index:2;max-width:720px;margin:0 auto}
+.ctitle{font-size:clamp(72px,10vw,136px)!important;margin-bottom:24px}
+.csub{font-size:15px;font-weight:300;color:var(--muted);line-height:1.75;margin-bottom:52px}
+.cbtns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.cbtn{padding:17px 44px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .3s;cursor:none;display:inline-flex;align-items:center;gap:10px}
+.cbtn-wa{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
+.cbtn-wa:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(37,211,102,0.4)}
+.cbtn-g{background:transparent;border:1.5px solid rgba(255,255,255,0.12);color:var(--muted)}
+.cbtn-g:hover{border-color:var(--c3);color:var(--c3)}
+
+/* FOOTER */
+footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--s1)}
+.flogo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em}
+.flegal{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.16);letter-spacing:.06em}
+.flinks{display:flex;gap:24px;list-style:none}
+.flinks a{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.flinks a:hover{color:var(--text)}
+
+.hr{height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);margin:0 56px}
+
+.rev{opacity:0;transform:translateY(36px);transition:opacity .75s ease,transform .75s ease}
+.rev.in{opacity:1;transform:translateY(0)}
+@keyframes fup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* WA icon */
+.wa-icon{width:18px;height:18px;fill:white;flex-shrink:0}
+
+@media(max-width:900px){
+  nav{padding:0 20px}.nav-r a:not(.nav-cta){display:none}
+  section,footer{padding-left:20px!important;padding-right:20px!important}
+  .hr{margin:0 20px}
+  h1{font-size:clamp(64px,14vw,100px)}
+  .hero-kpis{flex-wrap:wrap;gap:20px}
+  .kpi+.kpi{padding-left:0;border-left:none}
+  .wgrid,.agrid,.psteps,.ocards,.tools{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:14px;text-align:center}
+}
+</style>
+</head>
+<body>
+<div id="dot"></div>
+<div id="ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Sébastien Alba<span class="logo-pill">IA Vidéo</span></a>
+  <div class="nav-r">
+    <a href="#work">Réalisations</a>
+    <a href="#about">Approche</a>
+    <a href="#process">Process</a>
+    <a href="#offer">Offres</a>
+    <a href="https://wa.me/33625884486" target="_blank" class="nav-cta">Démarrer →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="mesh"></div><div class="hgrid"></div>
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+  <div class="hero-tag"><span class="tblink"></span>Disponible · Var, France · Expert Vidéo IA</div>
+  <h1>
+    <span style="display:block">Votre pub.</span>
+    <span style="display:block" class="gr">Créée par</span>
+    <span style="display:block" class="outline">l'IA.</span>
+  </h1>
+  <p class="hero-desc">Des vidéos publicitaires <strong>entièrement générées par intelligence artificielle</strong> — sans tournage, sans équipe, pour <strong>tous les secteurs</strong>. Livraison en <strong>48 à 72 h</strong>, qualité <strong>Full HD à 4K</strong>.</p>
+  <div class="hero-btns">
+    <a href="https://wa.me/33625884486" target="_blank" class="btn-fire">
+      <svg class="wa-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span>Démarrer sur WhatsApp</span>
+    </a>
+    <a href="#work" class="btn-outline">Voir les réalisations</a>
+  </div>
+  <div class="hero-kpis">
+    <div class="kpi"><div class="kpi-acc"></div><div class="kv">48–72H</div><div class="kl">Délai de livraison</div></div>
+    <div class="kpi"><div class="kpi-acc"></div><div class="kv">0</div><div class="kl">Tournage requis</div></div>
+    <div class="kpi"><div class="kpi-acc"></div><div class="kv">4K</div><div class="kl">Full HD à 4K</div></div>
+    <div class="kpi"><div class="kpi-acc"></div><div class="kv">∞</div><div class="kl">Secteurs adaptables</div></div>
+  </div>
+  <div class="scroll-cue"><div class="sc-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>Scroll</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-t">
+    <span class="ticker-i">ChatGPT <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Midjourney <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Kling AI <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Sora <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Seedance <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">DaVinci Resolve <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">ElevenLabs <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Livraison 48–72h <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Full HD → 4K <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Zéro Tournage <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Tous Secteurs <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">ChatGPT <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Midjourney <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Kling AI <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Sora <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Seedance <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">DaVinci Resolve <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">ElevenLabs <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Livraison 48–72h <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Full HD → 4K <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Zéro Tournage <span class="ticker-sep">✦</span></span>
+    <span class="ticker-i">Tous Secteurs <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- WORK -->
+<section id="work">
+  <div class="whead rev">
+    <div>
+      <div class="slabel">Réalisations</div>
+      <h2>Ce que <span class="gr2">l'IA</span><br>peut faire.</h2>
+    </div>
+  </div>
+  <div class="wgrid">
+
+    <!-- SPEEDKART -->
+    <div class="wcard rev">
+      <div class="wcard-thumb">
+        <canvas class="wcard-canvas" id="cvk"></canvas>
+        <a class="wcard-yt-link" href="https://youtu.be/8uG31_HD7nE" target="_blank" rel="noopener">
+          <div class="yt-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          <span class="yt-label">Regarder sur YouTube</span>
+        </a>
+        <div class="wcard-badge">100% IA</div>
+      </div>
+      <div class="wcard-info">
+        <div class="wcard-sector">Sport · Karting · Événementiel</div>
+        <div class="wcard-name">Speedkart Hyères</div>
+        <div class="wcard-sub">Vidéo promotionnelle — zéro tournage — entièrement générée par IA</div>
+      </div>
+    </div>
+
+    <!-- COIFFEUR LUXE -->
+    <div class="wcard rev" style="transition-delay:.15s">
+      <div class="wcard-thumb">
+        <canvas class="wcard-canvas" id="cvc"></canvas>
+        <a class="wcard-yt-link" href="https://youtu.be/humNVbSbxsg" target="_blank" rel="noopener">
+          <div class="yt-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          <span class="yt-label">Regarder sur YouTube</span>
+        </a>
+        <div class="wcard-badge">100% IA</div>
+      </div>
+      <div class="wcard-info">
+        <div class="wcard-sector">Luxe · Beauté · Coiffure</div>
+        <div class="wcard-name">Publicité Luxe</div>
+        <div class="wcard-sub">Publicité haut de gamme — esthétique premium — entièrement générée par IA</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="agrid">
+    <div class="rev">
+      <div class="slabel">Approche</div>
+      <h2 style="margin-bottom:28px">La vidéo IA,<br><span class="dim">sans limite.</span></h2>
+      <p class="about-body">Je suis <strong>Sébastien Alba</strong>, expert vidéo IA basé dans le <strong>Var</strong>. Je combine production audiovisuelle et outils IA de dernière génération pour créer des publicités qui marquent vraiment.</p>
+      <p class="about-body"><strong>Tous les secteurs sont adaptables</strong> — commerce, sport, beauté, restauration, immobilier, événementiel, artisanat, hôtellerie. Si vous avez une marque, je peux la mettre en scène.</p>
+      <p class="about-body">Résultat : un rendu <strong>Full HD à 4K</strong> livré en <strong>48 à 72 h</strong>, sans équipe de tournage, pour un budget optimisé.</p>
+    </div>
+    <div class="rev" style="transition-delay:.15s">
+      <div class="slabel">Stack IA</div>
+      <div class="tools">
+        <div class="tool"><div class="tool-ico">🧠</div><div class="tool-n">ChatGPT</div><div class="tool-r">Génération & scripts</div></div>
+        <div class="tool"><div class="tool-ico">🎨</div><div class="tool-n">Midjourney</div><div class="tool-r">Création visuelle</div></div>
+        <div class="tool"><div class="tool-ico">🎬</div><div class="tool-n">Kling AI</div><div class="tool-r">Animation vidéo</div></div>
+        <div class="tool"><div class="tool-ico">🌱</div><div class="tool-n">Seedance</div><div class="tool-r">Vidéo générative</div></div>
+        <div class="tool"><div class="tool-ico">🎛️</div><div class="tool-n">DaVinci Resolve</div><div class="tool-r">Montage & color</div></div>
+        <div class="tool"><div class="tool-ico">🔊</div><div class="tool-n">ElevenLabs</div><div class="tool-r">Voix off & audio IA</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="rev" style="text-align:center;margin-bottom:12px">
+    <div class="slabel" style="justify-content:center">Comment ça marche</div>
+    <h2>3 étapes.<br><span class="dim">48 à 72 heures.</span></h2>
+  </div>
+  <div class="psteps">
+    <div class="pstep rev"><div class="pn">01</div><div class="pt">Brief & Concept</div><p class="pd">Échange sur votre marque, vos objectifs, votre cible. Je construis le concept visuel et narratif adapté à votre univers.</p></div>
+    <div class="pstep rev" style="transition-delay:.15s"><div class="pn">02</div><div class="pt">Génération IA</div><p class="pd">Production des visuels avec Midjourney & ChatGPT, animation des scènes avec Kling AI et Seedance. Chaque frame est générée et sélectionnée avec soin.</p></div>
+    <div class="pstep rev" style="transition-delay:.3s"><div class="pn">03</div><div class="pt">Montage & Livraison</div><p class="pd">Assemblage, étalonnage et sound design sur DaVinci Resolve. Livraison Full HD à 4K en 48 à 72 h, optimisée pour tous vos supports digitaux.</p></div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- OFFER -->
+<section id="offer">
+  <div class="rev"><div class="slabel">Offres</div><h2>Formules.<br><span class="dim">Devis sur mesure.</span></h2></div>
+  <div class="ocards">
+    <div class="ocard rev">
+      <div class="on">Essentiel</div><div class="ot">Vidéo pub<br>15–30 secondes</div>
+      <ul class="ofeats">
+        <li>Concept & storyboard</li><li>Visuels Midjourney & ChatGPT</li><li>Montage professionnel</li>
+        <li>Musique & sound design</li><li>1 révision incluse</li><li>Livraison Full HD 48–72 h</li>
+      </ul>
+      <a href="https://wa.me/33625884486" target="_blank" class="olink">Demander un devis</a>
+    </div>
+    <div class="ocard hot rev" style="transition-delay:.15s">
+      <div class="ohot-tag">⚡ Populaire</div>
+      <div class="on">Premium</div><div class="ot">Vidéo pub<br>30–60 secondes</div>
+      <ul class="ofeats">
+        <li>Concept & storyboard détaillé</li><li>Animations Kling AI & Seedance</li>
+        <li>Montage cinématographique</li><li>Voix off ElevenLabs incluse</li>
+        <li>2 révisions incluses</li><li>Livraison Full HD à 4K</li>
+      </ul>
+      <a href="https://wa.me/33625884486" target="_blank" class="olink">Demander un devis</a>
+    </div>
+    <div class="ocard rev" style="transition-delay:.3s">
+      <div class="on">Sur-mesure</div><div class="ot">Abonnement<br>ou pack vidéos</div>
+      <ul class="ofeats">
+        <li>Plusieurs vidéos / mois</li><li>Tous secteurs & formats</li>
+        <li>Multi-plateformes</li><li>Révisions illimitées</li>
+        <li>Réactivité prioritaire</li><li>Accompagnement continu</li>
+      </ul>
+      <a href="https://wa.me/33625884486" target="_blank" class="olink">En discuter</a>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="cbg"></div>
+  <div class="cinner rev">
+    <div class="slabel" style="justify-content:center">Contact</div>
+    <h2 class="ctitle">Donnons<br>vie à votre<br><span class="gr2">vision.</span></h2>
+    <p class="csub">Un projet en tête ? Quel que soit votre secteur, discutons de ce que l'IA peut faire pour votre marque.<br>Réponse garantie sous 24 h.</p>
+    <div class="cbtns">
+      <a href="https://wa.me/33625884486" target="_blank" class="cbtn cbtn-wa">
+        <svg class="wa-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Message WhatsApp
+      </a>
+      <a href="https://www.instagram.com/sebastalba/" target="_blank" class="cbtn cbtn-g">Instagram</a>
+      <a href="https://www.linkedin.com/in/sébastien-alba-12a754204/" target="_blank" class="cbtn cbtn-g">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flogo">Sébastien Alba</div>
+  <div class="flegal">© 2025 Aquilone Vidéos SASU · Tous droits réservés</div>
+  <ul class="flinks">
+    <li><a href="#work">Réalisations</a></li>
+    <li><a href="https://wa.me/33625884486" target="_blank">WhatsApp</a></li>
+  </ul>
+</footer>
+
+<script>
+/* CURSOR */
+const dot=document.getElementById('dot'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.tool,.pstep,.ocard,.wcard').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('h'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('h'));
+});
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
+document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+
+/* CANVAS KARTING */
+(function(){
+  const cv=document.getElementById('cvk');if(!cv)return;
+  const ctx=cv.getContext('2d');let w,h,t=0;
+  function rsz(){w=cv.width=cv.offsetWidth;h=cv.height=cv.offsetHeight}
+  rsz();new ResizeObserver(rsz).observe(cv);
+  const pts=[[.15,.65],[.78,.28],[.82,.72],[.22,.42]];
+  let pi=0,prog=0;
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    // bg gradient
+    const g=ctx.createRadialGradient(w*.35,h*.6,0,w*.35,h*.6,w*.5);
+    g.addColorStop(0,'rgba(42,18,0,1)');g.addColorStop(.5,'rgba(13,8,0,1)');g.addColorStop(1,'rgba(2,2,2,1)');
+    ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    // track ovals
+    [[w*.38,h*.3],[w*.27,h*.22]].forEach(([rx,ry],i)=>{
+      ctx.save();ctx.strokeStyle=`rgba(255,140,0,${[.07,.04][i]})`;ctx.lineWidth=[2,1][i];
+      ctx.beginPath();ctx.ellipse(w*.5,h*.5,rx,ry,-.1,0,Math.PI*2);ctx.stroke();ctx.restore();
+    });
+    // speed lines
+    for(let i=0;i<5;i++){
+      const y=h*(.25+i*.1);const a=(Math.sin(t*.05+i)*.4+.4)*.2;
+      ctx.save();ctx.strokeStyle=`rgba(255,140,0,${a})`;ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(w*.02,y);ctx.lineTo(w*.38,y);ctx.stroke();ctx.restore();
+    }
+    // kart
+    const na=(pi+1)%pts.length;
+    prog+=.007;if(prog>=1){prog=0;pi=(pi+1)%pts.length}
+    const ease=prog<.5?2*prog*prog:1-Math.pow(-2*prog+2,2)/2;
+    const cx=pts[pi][0]+(pts[na][0]-pts[pi][0])*ease;
+    const cy=pts[pi][1]+(pts[na][1]-pts[pi][1])*ease;
+    // glow rings
+    [28,16,8].forEach((r,i)=>{
+      const a=[.06,.12,.25][i];
+      ctx.save();ctx.fillStyle=`rgba(255,140,0,${a})`;
+      ctx.beginPath();ctx.arc(cx*w,cy*h,r,0,Math.PI*2);ctx.fill();ctx.restore();
+    });
+    ctx.save();ctx.fillStyle='#ff8c00';
+    ctx.beginPath();ctx.arc(cx*w,cy*h,4,0,Math.PI*2);ctx.fill();ctx.restore();
+    t++;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* CANVAS LUXE */
+(function(){
+  const cv=document.getElementById('cvc');if(!cv)return;
+  const ctx=cv.getContext('2d');let w,h,t=0;
+  function rsz(){w=cv.width=cv.offsetWidth;h=cv.height=cv.offsetHeight}
+  rsz();new ResizeObserver(rsz).observe(cv);
+  const parts=Array.from({length:28},()=>({x:Math.random(),y:Math.random()+.5,s:Math.random()*.8+.4,v:Math.random()*.0015+.0008,o:Math.random()*.6+.2}));
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const g=ctx.createRadialGradient(w*.5,h*.5,0,w*.5,h*.5,w*.55);
+    g.addColorStop(0,'rgba(0,20,40,1)');g.addColorStop(.5,'rgba(0,5,16,1)');g.addColorStop(1,'rgba(2,2,10,1)');
+    ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    const sc=Math.sin(t*.012)*.5+.5;
+    // rings
+    [.36,.25,.15,.07].forEach((r,i)=>{
+      const a=[.05,.08,.12,.2][i]*(sc*.25+.8);
+      ctx.save();ctx.strokeStyle=`rgba(0,212,255,${a})`;ctx.lineWidth=[1.5,1,1,.8][i];
+      ctx.beginPath();ctx.arc(w*.5,h*.5,r*w,0,Math.PI*2);ctx.stroke();ctx.restore();
+    });
+    // verticals
+    [.3,.5,.7].forEach((x,i)=>{
+      const a=(Math.sin(t*.018+i*2.1)*.3+.45)*.07;
+      ctx.save();ctx.strokeStyle=`rgba(0,212,255,${a})`;ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(x*w,h*.04);ctx.lineTo(x*w,h*.96);ctx.stroke();ctx.restore();
+    });
+    // particles
+    parts.forEach(p=>{
+      p.y-=p.v;if(p.y<0){p.y=1.1;p.x=Math.random()}
+      const pa=Math.sin(t*.025+p.s*8)*.35+.65;
+      ctx.save();ctx.fillStyle=`rgba(0,212,255,${p.o*pa*.55})`;
+      ctx.beginPath();ctx.arc(p.x*w,p.y*h,1.8*p.s,0,Math.PI*2);ctx.fill();ctx.restore();
+    });
+    // center glow
+    const cg=ctx.createRadialGradient(w*.5,h*.5,0,w*.5,h*.5,w*.12);
+    cg.addColorStop(0,`rgba(0,212,255,${(sc*.3+.1)*.12})`);cg.addColorStop(1,'transparent');
+    ctx.fillStyle=cg;ctx.fillRect(0,0,w,h);
+    t++;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
